@@ -158,6 +158,9 @@
 </head>
 
 <body>
+     <audio id="background-music" loop>
+    <source src="./assets/audio/Chimss.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="fixed-area">
         <img id="main-img" src="./assets/images/1.gif" alt="Hình ảnh" />
@@ -231,6 +234,9 @@
         yesBtn.addEventListener('click', () => {
             textElement.style.display = "none";
             console.log("Yes button clicked");
+            const backgroundMusic = document.getElementById('background-music');
+            backgroundMusic.volume = 0.3; // Âm lượng 30%
+            backgroundMusic.play().catch(e => console.log("Không thể phát nhạc:", e));
             imgElement.style.display = "none";
             buttonContainer.style.display = "none";
 
@@ -337,4 +343,5 @@
 
 
 </html>
+
 
