@@ -158,47 +158,53 @@
 </head>
 
 <body>
-     <audio id="background-music" loop preload="none">
-    <source src="./assets/audio/Chimss.mp3" type="audio/mpeg">
+    <audio id="background-music" loop preload="none">
+        <source src="./assets/audio/Chimss.mp3" type="audio/mpeg">
     </audio>
 
     <div id="fixed-area">
         <img id="main-img" src="./assets/images/1.gif" alt="Hình ảnh" />
-        <div id="text">Cuối tuần cho tui <br> xin một cái hẹn nhaa!</div> <!-- Sửa lời nhắn chính ở đây -->
+        <div id="text">Cuối tuần cho tui <br> xin một cái hẹn nhaa!</div>
     </div>
 
     <div id="button-container">
-        <button id="yes-btn">uce</button> <!-- Nút xác nhận đồng ý -->
-        <button id="no-btn">hông</button> <!-- Nút từ chối  -->
+        <button id="yes-btn">uce</button>
+        <button id="no-btn">hông</button>
     </div>
     <div id="particles-js"></div>
 
     <script>
+        // Tracking thời gian bắt đầu
+        const startTime = Date.now();
+        
+        // Track khi người dùng vào trang
+        gtag('event', 'page_view', {
+            'event_category': 'engagement',
+            'event_label': 'mylove_page_loaded'
+        });
+
         const textElement = document.getElementById('text');
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const imgElement = document.getElementById('main-img');
         const buttonContainer = document.getElementById('button-container');
 
-        // Bỏ phần cmt để hiển thị lời nhắn chính chuyển tiếp
         const noTexts = [
-        "Đừng màa?",
-          "xin đóa nhaa",
-          "Đừng làm vậy với tui",
-          "Tim tui đang tan vỡ",
-          "pleaseeee"
+            "Đừng màa?",
+            "xin đóa nhaa",
+            "Đừng làm vậy với tui",
+            "Tim tui đang tan vỡ",
+            "pleaseeee"
         ];
 
-        //Sửa câu trả lời nút từ chối
         const noText = [
             "Đừng màa?",
-          "xin đóa nhaa",
-          "Đừng làm vậy với tui",
-          "Tim tui đang tan vỡ",
-          "pleaseeee"
+            "xin đóa nhaa",
+            "Đừng làm vậy với tui",
+            "Tim tui đang tan vỡ",
+            "pleaseeee"
         ];
 
-        // Ảnh chuyển thiếp khi ấn nút từ chối
         const noImgs = [
             "./assets/images/2.gif",
             "./assets/images/3.gif",
@@ -211,9 +217,22 @@
         let yesFontSize = 16;
 
         noBtn.addEventListener('click', () => {
-            if (noClickCount < noText.length) {
+            // 🎯 TRACKING NÚT "HÔNG"
+            gtag('event', 'button_click', {
+                'event_category': 'user_interaction',
+                'event_label': 'no_button',
+                'button_text': 'hông',
+                'click_count': noClickCount + 1
+            });
 
-                // Bỏ phần cmt để hiển thị lời nhắn chính chuyển tiếp
+            // Track từng lần bấm "hông"
+            gtag('event', 'rejection_count', {
+                'event_category': 'user_behavior',
+                'event_label': `rejection_${noClickCount + 1}`,
+                'value': noClickCount + 1
+            });
+
+            if (noClickCount < noText.length) {
                 textElement.innerText = noTexts[noClickCount];
                 imgElement.src = noImgs[noClickCount];
                 noBtn.innerText = noText[noClickCount];
@@ -225,6 +244,13 @@
             }
 
             if (noClickCount === noText.length) {
+                // Track khi nút "hông" bị ẩn
+                gtag('event', 'no_button_hidden', {
+                    'event_category': 'user_behavior',
+                    'event_label': 'persistent_rejection',
+                    'total_rejections': noClickCount
+                });
+                
                 setTimeout(() => {
                     noBtn.style.display = "none";
                 }, 100);
@@ -232,14 +258,46 @@
         });
 
         yesBtn.addEventListener('click', () => {
+            // 🎯 TRACKING NÚT "UCE" 
+            const timeToDecision = Math.round((Date.now() - startTime) / 1000);
+            
+            gtag('event', 'button_click', {
+                'event_category': 'user_interaction',
+                'event_label': 'yes_button',
+                'button_text': 'uce',
+                'success': true
+            });
+
+            // Track thời gian quyết định
+            gtag('event', 'time_to_decision', {
+                'event_category': 'user_behavior',
+                'event_label': 'yes_decision_time',
+                'value': timeToDecision,
+                'rejections_before_yes': noClickCount
+            });
+
+            // Track conversion thành công
+            gtag('event', 'conversion', {
+                'event_category': 'success',
+                'event_label': 'date_accepted',
+                'value': 1
+            });
+
             textElement.style.display = "none";
             console.log("Yes button clicked");
+            
             const backgroundMusic = document.getElementById('background-music');
-            backgroundMusic.volume = 0.;
+            backgroundMusic.volume = 0.2;
             setTimeout(() => {
-            backgroundMusic.play().catch(e => console.log("Không thể phát nhạc:", e));
+                backgroundMusic.play().then(() => {
+                    // Track khi nhạc phát thành công
+                    gtag('event', 'music_play', {
+                        'event_category': 'engagement',
+                        'event_label': 'background_music_started'
+                    });
+                }).catch(e => console.log("Không thể phát nhạc:", e));
             }, 500);
-            backgroundMusic.play().catch(e => console.log("Không thể phát nhạc:", e));
+            
             imgElement.style.display = "none";
             buttonContainer.style.display = "none";
 
@@ -263,7 +321,7 @@
                     overflow: "hidden"
                 });
 
-                const starCount = 80;
+                const starCount = 60; // Giảm từ 80 xuống 60 để tăng performance
                 for (let i = 0; i < starCount; i++) {
                     const star = document.createElement("div");
                     star.className = "star";
@@ -275,21 +333,26 @@
                     const delay = Math.random() * 3 + "s";
                     const duration = (Math.random() * 2 + 1) + "s";
                     star.style.cssText = `
-        position: absolute;
-        width: ${size};
-        height: ${size};
-        background: white;
-        border-radius: 50%;
-        left: ${left};
-        top: ${top};
-        opacity: 0;
-        animation: starBlink ${duration} ease-in-out infinite;
-        animation-delay: ${delay};
-      `;
+                        position: absolute;
+                        width: ${size};
+                        height: ${size};
+                        background: white;
+                        border-radius: 50%;
+                        left: ${left};
+                        top: ${top};
+                        opacity: 0;
+                        animation: starBlink ${duration} ease-in-out infinite;
+                        animation-delay: ${delay};
+                    `;
                 }
             }
 
-            //Sửa lời nhắn hiển thị chữ rơi ở đây
+            // Track khi animation bắt đầu
+            gtag('event', 'animation_start', {
+                'event_category': 'engagement',
+                'event_label': 'success_animation_started'
+            });
+
             const fallingWords = [" ❤", "yee", "Quá đã rùi", "hihi", "😘", "😍", "💖", "💘", "💝", "💕", "💞", "💓", "💗", "💟"];
 
             const layers = [
@@ -337,15 +400,22 @@
                         layer.positions.splice(index, 1);
                     }
                 }, layer.duration * 1000 + 500);
-           }, 200);
+            }, 200); // Tăng từ 100ms lên 200ms để giảm lag
+        });
+
+        // Track khi người dùng rời khỏi trang
+        window.addEventListener('beforeunload', function() {
+            const sessionTime = Math.round((Date.now() - startTime) / 1000);
+            gtag('event', 'session_end', {
+                'event_category': 'engagement',
+                'event_label': 'page_exit',
+                'value': sessionTime,
+                'final_decision': noClickCount > 0 ? 'rejected' : 'no_interaction'
+            });
         });
 
     </script>
 
 </body>
 
-
 </html>
-
-
-
