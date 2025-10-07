@@ -158,7 +158,7 @@
 </head>
 
 <body>
-     <audio id="background-music" loop>
+     <audio id="background-music" loop preload="none">
     <source src="./assets/audio/Chimss.mp3" type="audio/mpeg">
     </audio>
 
@@ -235,7 +235,10 @@
             textElement.style.display = "none";
             console.log("Yes button clicked");
             const backgroundMusic = document.getElementById('background-music');
-            backgroundMusic.volume = 0.3; // Âm lượng 30%
+            backgroundMusic.volume = 0.;
+            setTimeout(() => {
+            backgroundMusic.play().catch(e => console.log("Không thể phát nhạc:", e));
+            }, 500);
             backgroundMusic.play().catch(e => console.log("Không thể phát nhạc:", e));
             imgElement.style.display = "none";
             buttonContainer.style.display = "none";
@@ -334,7 +337,7 @@
                         layer.positions.splice(index, 1);
                     }
                 }, layer.duration * 1000 + 500);
-            }, 100);
+           }, 200);
         });
 
     </script>
@@ -343,5 +346,6 @@
 
 
 </html>
+
 
 
