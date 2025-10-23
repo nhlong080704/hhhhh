@@ -33,6 +33,32 @@
             position: relative;
             transition: background-color 0.8s ease;
         }
+          #fixed-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  #main-img {
+    width: 250px; /* bạn có thể chỉnh lại kích thước */
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  #text {
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    line-height: 1.8;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(0,0,0,0.5); /* giúp đọc rõ hơn trên ảnh sáng */
+  }
+
+  #text strong {
+    color: #ff85c1;
+    font-weight: 600;}
 
         #fixed-area {
             width: 350px;
@@ -163,8 +189,15 @@
     </audio>
 
     <div id="fixed-area">
-        <img id="main-img" src="./assets/images/1.gif" alt="Hình ảnh" />
-        <div id="text">bà cho tui cơ hội <br> tui cho bà <br>sự quan tâm của tui,<br> mặc dù tui hơi nhạt<br>uce hong nè</div>
+  <img id="main-img" src="./assets/images/1.gif" alt="Hình ảnh" />
+  <div id="text">
+    bà cho tui cơ hội <br>
+    tui cho bà <br>
+    sự quan tâm của tui, <br>
+    mặc dù tui hơi nhạt <br>
+    hứa mụt lòng chung thủy 💖<br>
+    <strong>uce hong nè</strong>
+  </div>
     </div>
 
     <div id="button-container">
@@ -419,6 +452,7 @@
 </body>
 
 </html>
+
 
 
 
